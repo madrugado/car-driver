@@ -33,18 +33,18 @@ void renewA(struct timeval *tv, bool forward)
 {
 	if (forward)
 		if ((prevA - tv->tv_usec) > 500)
-				channelA = A_NTR + 50;
+				channelA = A_NTR + 10;
 		else
 		{
 			if (channelA < A_MAX - 10)
-				channelA += 50;
+				channelA += 10;
 		}
 	else
 		if ((prevA - tv->tv_usec) > 500)
-			channelA = A_NTR - 50;
+			channelA = A_NTR - 10;
 		else
-			if (channelA > A_MIN - 10)
-				channelA -= 50;
+			if (channelA > A_MIN + 10)
+				channelA -= 10;
 	
 	
 	prevA = tv->tv_usec;
@@ -54,18 +54,18 @@ void renewB(struct timeval *tv, bool right)
 {
 	if (right)
 		if ((prevB - tv->tv_usec) > 500)
-				channelB = B_NTR + 50;
+				channelB = B_NTR + 10;
 		else
 		{
 			if (channelB < B_MAX - 10)
-				channelB += 50;
+				channelB += 10;
 		}
 	else
 		if ((prevB - tv->tv_usec) > 500)
-			channelB = B_NTR - 50;
+			channelB = B_NTR - 10;
 		else
-			if (channelB > B_MIN - 10)
-				channelB -= 50;
+			if (channelB > B_MIN + 10)
+				channelB -= 10;
 
 
 	prevB = tv->tv_usec;
