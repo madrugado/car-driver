@@ -32,11 +32,11 @@ APPS = car-driver demo
 # the plugins
 all: $(APPS)
 
-car-driver: ${SRCDIR}/car-driver.cpp commands.h car-driver.h
+car-driver: ${SRCDIR}/car-driver.cpp ${SRCDIR}/commands.h ${SRCDIR}/car-driver.h
 	$(CC) $(CFLAGS) ${SRCDIR}/car-driver.cpp $(LFLAGS) -o car-driver
 	chmod 755 car-driver
 
-demo: ${SRCDIR}/demo.cpp commands.h car-driver.h
+demo: ${SRCDIR}/demo.cpp ${SRCDIR}/commands.h ${SRCDIR}/car-driver.h
 	$(CC) $(CFLAGS) ${SRCDIR}/demo.cpp $(LFLAGS) -o demo
 	chmod 755 demo	
 
