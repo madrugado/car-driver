@@ -12,14 +12,14 @@ namespace deviceCommand
   };
 }  
 
-//namespace deviceRetCode
-//{
-//  enum RetCode
-//  {
-//    OK              = 'o',
-//    BAD_ARGS        = 'b',
-//    UNKNOWN_COMMAND = 'u'
-//  };
-//}
+namespace deviceRetCode
+{
+  enum RetCode
+  {
+    OK              = 'o',
+    BAD_ARGS        = 'b',
+    UNKNOWN_COMMAND = 'u'
+  };
+}
 
 #endif //COMMANDS_H_INCLUDED
