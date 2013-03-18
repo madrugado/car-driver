@@ -16,10 +16,11 @@ namespace deviceRetCode
 {
   enum RetCode
   {
-    OK              = 'o',
-    BAD_ARGS        = 'b',
-    UNKNOWN_COMMAND = 'u'
+	OOK = 'o', //OK is causing error for some reason
+	BAD_ARGS = 'b',
+	UNKNOWN_COMMAND = 'u'
   };
+
 }
 
 #endif //COMMANDS_H_INCLUDED

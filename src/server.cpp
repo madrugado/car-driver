@@ -9,7 +9,7 @@
 #include <netinet/in.h>
 
 typedef	unsigned short	WORD;
-#define	XINPUT_GAMEPAD_START	0x0010
+#define	XINPUT_GAMEPAD_START		0x0010
 
 void error(const char *msg)
 {
