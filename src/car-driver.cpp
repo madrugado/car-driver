@@ -128,11 +128,6 @@ int main(int argc, char** argv)
 
 	struct timeval tv;
 
-	initscr();
-	raw();
-	keypad(stdscr, TRUE);
-	noecho();
-
 
 	while (true)
 	{
@@ -148,32 +143,31 @@ int main(int argc, char** argv)
 
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_DOWN)
 		 {
-				mvprintw(12,30,"DOWN Key pressed\n");
+				printf(12,30,"DOWN Key pressed\n");
 				renewA(&tv, false);
-				printw("Now A is %d", channelA);
+				printf("Now A is %d", channelA);
 		 }
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_UP)
 		 {
-				mvprintw(12,30,"UP Key pressed\n");
+				printf(12,30,"UP Key pressed\n");
 				renewA(&tv, true);
-				printw("Now A is %d", channelA);
+				printf("Now A is %d", channelA);
 		 }
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_LEFT)
 		 {
-				mvprintw(12,30,"LEFT Key pressed\n");
+				printf(12,30,"LEFT Key pressed\n");
 				renewB(&tv, false);
-				printw("Now B is %d", channelB);
+				printf("Now B is %d", channelB);
 		 }
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_RIGHT)
 		 {
-				mvprintw(12,30,"RIGHT Key pressed\n");
+				printf(12,30,"RIGHT Key pressed\n");
 				renewB(&tv, true);
-				mvprintw(13,30,"Now B is %d", channelB);
+				printf(13,30,"Now B is %d", channelB);
 		 }
 		setPWM(fd, channelA, channelB);
 	}
 
-	endwin();
 
     n = write(newsockfd,"I got your message",18);
     if (n < 0) error("ERROR writing to socket");
