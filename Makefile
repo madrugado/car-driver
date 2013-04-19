@@ -21,7 +21,7 @@ CFLAGS += -O2 -DLINUX -D_GNU_SOURCE -Wall
 # CFLAGS += -g 
 # CFLAGS +=  -DDEBUG
 
-LFLAGS += -lncurses
+# LFLAGS += -lncurses
 
 SRCDIR = ./src
 
