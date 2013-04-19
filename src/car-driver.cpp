@@ -143,27 +143,27 @@ int main(int argc, char** argv)
 
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_DOWN)
 		 {
-				printf(12,30,"DOWN Key pressed\n");
+				printf("DOWN Key pressed\n");
 				renewA(&tv, false);
 				printf("Now A is %d", channelA);
 		 }
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_UP)
 		 {
-				printf(12,30,"UP Key pressed\n");
+				printf("UP Key pressed\n");
 				renewA(&tv, true);
 				printf("Now A is %d", channelA);
 		 }
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_LEFT)
 		 {
-				printf(12,30,"LEFT Key pressed\n");
+				printf("LEFT Key pressed\n");
 				renewB(&tv, false);
 				printf("Now B is %d", channelB);
 		 }
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_RIGHT)
 		 {
-				printf(12,30,"RIGHT Key pressed\n");
+				printf("RIGHT Key pressed\n");
 				renewB(&tv, true);
-				printf(13,30,"Now B is %d", channelB);
+				printf("Now B is %d", channelB);
 		 }
 		setPWM(fd, channelA, channelB);
 	}
