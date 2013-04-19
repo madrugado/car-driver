@@ -47,23 +47,25 @@ void error(const char *msg)
 
 unsigned channelA = A_NTR, channelB = B_NTR; 
 suseconds_t prevA = 0, prevB = 0;
+const unsigned stepA = 10;
+const unsigned stepB = 10;
 
 void renewA(struct timeval *tv, bool forward)
 {
 	if (forward)
 		if ((prevA - tv->tv_usec) > 500)
-				channelA = A_NTR + 10;
+				channelA = A_NTR + stepA;
 		else
 		{
-			if (channelA < A_MAX - 10)
-				channelA += 10;
+			if (channelA < A_MAX - stepA)
+				channelA += stepA;
 		}
 	else
 		if ((prevA - tv->tv_usec) > 500)
-			channelA = A_NTR - 10;
+			channelA = A_NTR - stepA;
 		else
-			if (channelA > A_MIN + 10)
-				channelA -= 10;
+			if (channelA > A_MIN + stepA)
+				channelA -= stepA;
 	
 	
 	prevA = tv->tv_usec;
@@ -73,18 +75,18 @@ void renewB(struct timeval *tv, bool right)
 {
 	if (right)
 		if ((prevB - tv->tv_usec) > 500)
-				channelB = B_NTR + 10;
+				channelB = B_NTR + stepB;
 		else
 		{
-			if (channelB < B_MAX - 10)
-				channelB += 10;
+			if (channelB < B_MAX - stepB)
+				channelB += stepB;
 		}
 	else
 		if ((prevB - tv->tv_usec) > 500)
-			channelB = B_NTR - 10;
+			channelB = B_NTR - stepB;
 		else
-			if (channelB > B_MIN + 10)
-				channelB -= 10;
+			if (channelB > B_MIN + stepB)
+				channelB -= stepB;
 
 
 	prevB = tv->tv_usec;
