@@ -49,11 +49,12 @@ unsigned channelA = A_NTR, channelB = B_NTR;
 suseconds_t prevA = 0, prevB = 0;
 const unsigned stepA = 10;
 const unsigned stepB = 10;
+const unsigned timeout = 500000;
 
 void renewA(struct timeval *tv, bool forward)
 {
 	if (forward)
-		if ((prevA - tv->tv_usec) > 500)
+		if ((prevA - tv->tv_usec) > timeout)
 				channelA = A_NTR + stepA;
 		else
 		{
@@ -61,7 +62,7 @@ void renewA(struct timeval *tv, bool forward)
 				channelA += stepA;
 		}
 	else
-		if ((prevA - tv->tv_usec) > 500)
+		if ((prevA - tv->tv_usec) > timeout)
 			channelA = A_NTR - stepA;
 		else
 			if (channelA > A_MIN + stepA)
