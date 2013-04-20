@@ -75,7 +75,7 @@ void renewA(struct timeval *tv, bool forward)
 void renewB(struct timeval *tv, bool right)
 {
 	if (right)
-		if ((prevB - tv->tv_usec) > 500)
+		if ((prevB - tv->tv_usec) > timeout)
 				channelB = B_NTR + stepB;
 		else
 		{
@@ -83,7 +83,7 @@ void renewB(struct timeval *tv, bool right)
 				channelB += stepB;
 		}
 	else
-		if ((prevB - tv->tv_usec) > 500)
+		if ((prevB - tv->tv_usec) > timeout)
 			channelB = B_NTR - stepB;
 		else
 			if (channelB > B_MIN + stepB)
