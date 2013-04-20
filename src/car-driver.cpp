@@ -53,7 +53,7 @@ const unsigned long timeout = 500000;
 void renewA(struct timeval *tv, bool forward)
 {
 	if (forward)
-		if ((prevA - tv->tv_usec) > timeout)
+		if ((tv->tv_usec - prevA) > timeout)
 				channelA = A_NTR + stepA;
 		else
 		{
@@ -61,7 +61,7 @@ void renewA(struct timeval *tv, bool forward)
 				channelA += stepA;
 		}
 	else
-		if ((prevA - tv->tv_usec) > timeout)
+		if ((tv->tv_usec - prevA) > timeout)
 			channelA = A_NTR - stepA;
 		else
 			if (channelA > A_MIN + stepA)
@@ -74,7 +74,7 @@ void renewA(struct timeval *tv, bool forward)
 void renewB(struct timeval *tv, bool right)
 {
 	if (right)
-		if ((prevB - tv->tv_usec) > timeout)
+		if ((tv->tv_usec - prevB) > timeout)
 				channelB = B_NTR + stepB;
 		else
 		{
@@ -82,7 +82,7 @@ void renewB(struct timeval *tv, bool right)
 				channelB += stepB;
 		}
 	else
-		if ((prevB - tv->tv_usec) > timeout)
+		if ((tv->tv_usec - prevB) > timeout)
 			channelB = B_NTR - stepB;
 		else
 			if (channelB > B_MIN + stepB)
