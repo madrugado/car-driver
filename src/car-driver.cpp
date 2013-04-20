@@ -6,7 +6,6 @@
 // Description : Keyboard reading program for VisiRoad project
 //============================================================================
 
-#include <ncurses.h>
 #include <sys/time.h>
 
 #include <cstdio>
