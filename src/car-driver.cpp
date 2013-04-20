@@ -49,7 +49,7 @@ unsigned channelA = A_NTR, channelB = B_NTR;
 suseconds_t prevA = 0, prevB = 0;
 const unsigned stepA = 10;
 const unsigned stepB = 10;
-const unsigned timeout = 500000;
+const unsigned long timeout = 500000;
 
 void renewA(struct timeval *tv, bool forward)
 {
