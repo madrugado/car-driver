@@ -68,11 +68,11 @@ namespace serialPort
     timeout.tv_sec = TIMEOUT_S;
     timeout.tv_usec = TIMEOUT_US;
     
-    char* msg = new char[size + sizeof(Preamble)];
+    char* msg = (char*) malloc(size + sizeof(Preamble));
     memcpy(msg, Preamble, sizeof(Preamble));
     memcpy(msg + sizeof(Preamble), send_bytes, size);
   
-    write(fd, msg, size + sizeof(Preamble));  // send data
+    int bytes_sent = write(fd, msg, size + sizeof(Preamble));  // send data
 
     //n = select(fd + 1, &rdfs, NULL, NULL, &timeout);
     //if(n < 0)
