@@ -23,12 +23,12 @@
 
 #define PORT_NAME "/dev/ttyUSB0"
 
-#define A_MAX 2000
-#define A_MIN 1000
-#define A_NTR 1500
+#define A_MAX 1850
+#define A_MIN 1060
+#define A_NTR 1450
 
-#define B_MAX 1850
-#define B_MIN 1060
+#define B_MAX 2000
+#define B_MIN 1000
 #define B_NTR 1450
 
 typedef	unsigned short	WORD;
@@ -50,9 +50,9 @@ const unsigned stepA = 10;
 const unsigned stepB = 10;
 const unsigned long timeout = 500000;
 
-void renewA(struct timeval *tv, bool forward)
+void renewA(struct timeval *tv, bool right)
 {
-	if (forward)
+	if (right)
 		if ((tv->tv_usec - prevA) > timeout)
 				channelA = A_NTR + stepA;
 		else
@@ -71,9 +71,9 @@ void renewA(struct timeval *tv, bool forward)
 	prevA = tv->tv_usec;
 }
 
-void renewB(struct timeval *tv, bool right)
+void renewB(struct timeval *tv, bool forward)
 {
-	if (right)
+	if (forward)
 		if ((tv->tv_usec - prevB) > timeout)
 				channelB = B_NTR + stepB;
 		else
@@ -146,25 +146,25 @@ int main(int argc, char** argv)
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_DOWN)
 		 {
 				printf("DOWN Key pressed\n");
-				renewA(&tv, false);
+				renewB(&tv, false);
 				printf("Now A is %d", channelA);
 		 }
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_UP)
 		 {
 				printf("UP Key pressed\n");
-				renewA(&tv, true);
+				renewB(&tv, true);
 				printf("Now A is %d", channelA);
 		 }
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_LEFT)
 		 {
 				printf("LEFT Key pressed\n");
-				renewB(&tv, false);
+				renewA(&tv, false);
 				printf("Now B is %d", channelB);
 		 }
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_RIGHT)
 		 {
 				printf("RIGHT Key pressed\n");
-				renewB(&tv, true);
+				renewA(&tv, true);
 				printf("Now B is %d", channelB);
 		 }
 		setPWM(fd, channelA, channelB);

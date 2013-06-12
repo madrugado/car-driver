@@ -13,7 +13,7 @@
 DESTDIR = .
 
 # set the compiler to use
-CC = gcc
+CC = g++
 
 
 # general compile flags, enable all warnings to make compile more verbose

@@ -6,7 +6,7 @@
 #include <unistd.h>  // UNIX standard function definitions
 #include <fcntl.h>   // File control definitions
 #include <errno.h>   // Error number definitions
-#include <termios.h> // POSIX terminal control definitionss
+#include <termios.h> // POSIX terminal control definitions
 #include <time.h>    // time calls
 
 #define TIMEOUT_S  1
@@ -71,7 +71,7 @@ namespace serialPort
     timeout.tv_usec = TIMEOUT_US;
     
     char* msg = new char[size + PREAMBLE_LEN];
-    memcpy(msg, Preamble, PREABLE_LEN);
+    memcpy(msg, Preamble, PREAMBLE_LEN);
     memcpy(msg + PREAMBLE_LEN, send_bytes, size);
   
     write(fd, msg, size + PREAMBLE_LEN);  // send data
