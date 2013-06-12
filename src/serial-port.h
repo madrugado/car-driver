@@ -14,11 +14,9 @@
 
 #define IN_BUF_SIZE 64
 
-#define PREAMBLE_LEN 8
-
 namespace serialPort
 {
-  const char Preamble[] = {'U', 'S', 'w', '<', 'U', 'S', 'w', '<'};
+  const char Preamble[] = {'<', '<', 'U', 'U', 'S', 'S', 'w', '<', '<', 'U', 'S', 'S', 'w', 'w', '<', '<'};
   
   int open_port(const char *port_name);
   int configure_port(int fd);
@@ -70,11 +68,11 @@ namespace serialPort
     timeout.tv_sec = TIMEOUT_S;
     timeout.tv_usec = TIMEOUT_US;
     
-    char* msg = new char[size + PREAMBLE_LEN];
-    memcpy(msg, Preamble, PREAMBLE_LEN);
-    memcpy(msg + PREAMBLE_LEN, send_bytes, size);
+    char* msg = new char[size + sizeof(Preamble)];
+    memcpy(msg, Preamble, sizeof(Preamble));
+    memcpy(msg + sizeof(Preamble), send_bytes, size);
   
-    write(fd, msg, size + PREAMBLE_LEN);  // send data
+    write(fd, msg, size + sizeof(Preamble));  // send data
 
     //n = select(fd + 1, &rdfs, NULL, NULL, &timeout);
     //if(n < 0)
