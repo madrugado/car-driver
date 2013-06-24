@@ -17,7 +17,7 @@ CC = gcc
 
 
 # general compile flags, enable all warnings to make compile more verbose
-CFLAGS += -O2 -DLINUX -D_GNU_SOURCE -Wall 
+CFLAGS += -DLINUX -D_GNU_SOURCE -Wall 
 # CFLAGS += -g 
 # CFLAGS +=  -DDEBUG
 

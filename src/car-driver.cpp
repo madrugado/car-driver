@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-
+#include <linux/tcp.h>
 
 #include "serial-port.h"
 #include "car-driver.h"
@@ -29,7 +29,7 @@
 
 #define B_MAX 2000
 #define B_MIN 1000
-#define B_NTR 1450
+#define B_NTR 1470
 
 typedef	unsigned short	WORD;
 #define	XINPUT_GAMEPAD_DPAD_UP		0x0001
@@ -46,9 +46,9 @@ void error(const char *msg)
 
 unsigned channelA = A_NTR, channelB = B_NTR; 
 suseconds_t prevA = 0, prevB = 0;
-const unsigned stepA = 10;
-const unsigned stepB = 10;
-const unsigned long timeout = 500000;
+const unsigned stepA = 50;
+const unsigned stepB = 30;
+const unsigned long timeout = 10000000;
 
 void renewA(struct timeval *tv, bool right)
 {
@@ -114,6 +114,17 @@ int main(int argc, char** argv)
      if (bind(sockfd, (struct sockaddr *) &serv_addr,
               sizeof(serv_addr)) < 0)
               error("ERROR on binding");
+	
+	 int flag = 1;
+         int result = setsockopt(sockfd,            /* socket affected */
+                                 IPPROTO_TCP,     /* set option at TCP level */
+                                 TCP_NODELAY,     /* name of option */
+                                 (char *) &flag,  /* the cast is historical
+                                                         cruft */
+                                 sizeof(int));    /* length of option value */
+         if (result < 0)
+		error("ERROR on setting TCP_NODELAY option");
+
      listen(sockfd,5);
      clilen = sizeof(cli_addr);
      newsockfd = accept(sockfd,
@@ -129,6 +140,7 @@ int main(int argc, char** argv)
 	  serialPort::configure_port(fd);
 
 	struct timeval tv;
+	suseconds_t prevT = 0;
 
 
 	while (true)
@@ -147,27 +159,29 @@ int main(int argc, char** argv)
 		 {
 				printf("DOWN Key pressed\n");
 				renewB(&tv, false);
-				printf("Now A is %d", channelA);
+				printf("Now B is %d\n", channelB);
 		 }
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_UP)
 		 {
 				printf("UP Key pressed\n");
 				renewB(&tv, true);
-				printf("Now A is %d", channelA);
+				printf("Now B is %d\n", channelB);
 		 }
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_LEFT)
 		 {
 				printf("LEFT Key pressed\n");
 				renewA(&tv, false);
-				printf("Now B is %d", channelB);
+				printf("Now A is %d\n", channelA);
 		 }
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_RIGHT)
 		 {
 				printf("RIGHT Key pressed\n");
 				renewA(&tv, true);
-				printf("Now B is %d", channelB);
+				printf("Now A is %d\n", channelA);
 		 }
-		setPWM(fd, channelA, channelB);
+		//if (tv.tv_usec - prevT > 300000)
+			setPWM(fd, channelA, channelB);
+		prevT = tv.tv_usec;
 	}
 
 
