@@ -94,6 +94,7 @@ void renewB(struct timeval *tv, bool forward)
 
 int main(int argc, char** argv)
 {
+	FILE* fp = NULL;
     int sockfd, newsockfd, portno;
      socklen_t clilen;
      char buffer[256];
@@ -103,6 +104,14 @@ int main(int argc, char** argv)
          fprintf(stderr,"ERROR, no port provided\n");
          exit(1);
      }
+
+     if (argc > 2)
+     {
+    	 fp = fopen(argv[2], "wb");
+    	 if (fp == NULL)
+    		 fprintf(stderr, "\nFile for command log has not been open.\n");
+     }
+
      sockfd = socket(AF_INET, SOCK_STREAM, 0);
      if (sockfd < 0)
         error("ERROR opening socket");
@@ -120,7 +129,7 @@ int main(int argc, char** argv)
                                  IPPROTO_TCP,     /* set option at TCP level */
                                  TCP_NODELAY,     /* name of option */
                                  (char *) &flag,  /* the cast is historical
-                                                         cruft */
+                                                         craft */
                                  sizeof(int));    /* length of option value */
          if (result < 0)
 		error("ERROR on setting TCP_NODELAY option");
@@ -146,14 +155,19 @@ int main(int argc, char** argv)
 	while (true)
 	{
 		 n = read(newsockfd, buffer, sizeof(WORD));
-		 if (n < 0) error("ERROR reading from socket");
-		 if ( buffer[0] & XINPUT_GAMEPAD_START)
-		{
+		 if (n < 0)
+		 {
+			 fclose(fp);
+			 error("ERROR reading from socket");
+		 }
+		 if (buffer[0] & XINPUT_GAMEPAD_START)
+		 {
+			 fclose(fp);
 			puts("Received START. Exiting.");
-			 break;
-		}
+			break;
+		 }
 		 printf("Here is the message: %04x\n", (buffer[1] << 8) | buffer[0]);
-		gettimeofday(&tv, NULL);
+		 gettimeofday(&tv, NULL);
 
 		 if ( buffer[0] & XINPUT_GAMEPAD_DPAD_DOWN)
 		 {
@@ -179,9 +193,13 @@ int main(int argc, char** argv)
 				renewA(&tv, true);
 				printf("Now A is %d\n", channelA);
 		 }
-		//if (tv.tv_usec - prevT > 300000)
-			setPWM(fd, channelA, channelB);
-		prevT = tv.tv_usec;
+		 //if (tv.tv_usec - prevT > 300000)
+		 setPWM(fd, channelA, channelB);
+
+		 fwrite(&(tv.tv_usec), sizeof(tv.tv_usec), 1, fp);
+		 fwrite(buffer, sizeof(WORD), 1, fp);
+
+		 prevT = tv.tv_usec;
 	}
 
 
