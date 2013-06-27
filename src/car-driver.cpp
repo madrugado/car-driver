@@ -157,12 +157,12 @@ int main(int argc, char** argv)
 		 n = read(newsockfd, buffer, sizeof(WORD));
 		 if (n < 0)
 		 {
-			 fclose(fp);
+			 if (fp != NULL) fclose(fp);
 			 error("ERROR reading from socket");
 		 }
 		 if (buffer[0] & XINPUT_GAMEPAD_START)
 		 {
-			 fclose(fp);
+			if (fp != NULL) fclose(fp);
 			puts("Received START. Exiting.");
 			break;
 		 }
@@ -196,8 +196,11 @@ int main(int argc, char** argv)
 		 //if (tv.tv_usec - prevT > 300000)
 		 setPWM(fd, channelA, channelB);
 
-		 fwrite(&(tv.tv_usec), sizeof(tv.tv_usec), 1, fp);
-		 fwrite(buffer, sizeof(WORD), 1, fp);
+		 if (fp != NULL)
+		 {
+		 	fwrite(&(tv.tv_usec), sizeof(tv.tv_usec), 1, fp);
+		 	fwrite(buffer, sizeof(WORD), 1, fp);
+		 }
 
 		 prevT = tv.tv_usec;
 	}
