@@ -194,6 +194,7 @@ int main(int argc, char** argv)
 
 		 setPWM(fd, channelA, channelB);
 
+		 fwrite(&(tv.tv_sec), sizeof(tv.tv_sec), 1, fp);
 		 fwrite(&(tv.tv_usec), sizeof(tv.tv_usec), 1, fp);
 		 fwrite(buffer, sizeof(WORD), 1, fp);
 	}
