@@ -1,7 +1,7 @@
 //============================================================================
-// Name        : kbd-reader.cpp
+// Name        : car-driver.cpp
 // Author      : Val Malykh
-// Version     : 0.1
+// Version     : 0.8
 // Copyright   : BSD 2-clause license
 // Description : Keyboard reading program for VisiRoad project
 //============================================================================
@@ -45,15 +45,14 @@ void error(const char *msg)
 }
 
 unsigned channelA = A_NTR, channelB = B_NTR; 
-suseconds_t prevA = 0, prevB = 0;
+struct timeval prevA = { 0 }, prevB = { 0 };
 const unsigned stepA = 50;
 const unsigned stepB = 30;
-const unsigned long timeout = 10000000;
 
 void renewA(struct timeval *tv, bool right)
 {
 	if (right)
-		if ((tv->tv_usec - prevA) > timeout)
+		if (timeoutExeeded(tv, &prevA))
 				channelA = A_NTR + stepA;
 		else
 		{
@@ -61,20 +60,21 @@ void renewA(struct timeval *tv, bool right)
 				channelA += stepA;
 		}
 	else
-		if ((tv->tv_usec - prevA) > timeout)
+		if (timeoutExeeded(tv, &prevA))
 			channelA = A_NTR - stepA;
 		else
 			if (channelA > A_MIN + stepA)
 				channelA -= stepA;
 	
 	
-	prevA = tv->tv_usec;
+	prevA.tv_sec = tv->tv_sec;
+	prevA.tv_usec = tv->tv_usec;
 }
 
 void renewB(struct timeval *tv, bool forward)
 {
 	if (forward)
-		if ((tv->tv_usec - prevB) > timeout)
+		if (timeoutExeeded(tv, &prevB))
 				channelB = B_NTR + stepB;
 		else
 		{
@@ -82,14 +82,14 @@ void renewB(struct timeval *tv, bool forward)
 				channelB += stepB;
 		}
 	else
-		if ((tv->tv_usec - prevB) > timeout)
+		if (timeoutExeeded(tv, &prevB))
 			channelB = B_NTR - stepB;
 		else
 			if (channelB > B_MIN + stepB)
 				channelB -= stepB;
 
-
-	prevB = tv->tv_usec;
+	prevB.tv_sec = tv->tv_sec;
+	prevB.tv_usec = tv->tv_usec;
 }
 
 int main(int argc, char** argv)
@@ -149,8 +149,6 @@ int main(int argc, char** argv)
 	  serialPort::configure_port(fd);
 
 	struct timeval tv;
-	suseconds_t prevT = 0;
-
 
 	while (true)
 	{
@@ -193,13 +191,11 @@ int main(int argc, char** argv)
 				renewA(&tv, true);
 				printf("Now A is %d\n", channelA);
 		 }
-		 //if (tv.tv_usec - prevT > 300000)
+
 		 setPWM(fd, channelA, channelB);
 
 		 fwrite(&(tv.tv_usec), sizeof(tv.tv_usec), 1, fp);
 		 fwrite(buffer, sizeof(WORD), 1, fp);
-
-		 prevT = tv.tv_usec;
 	}
 
 

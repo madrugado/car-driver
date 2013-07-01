@@ -2,6 +2,7 @@
 #define CAR_DRIVER_H_INCLUDED
 
 #include <stdint.h>
+#include <limits.h>
 
 #include "serial-port.h"
 #include "commands.h"
@@ -36,6 +37,27 @@ int resetWTCTimer(int fd)
 
   serialPort::send_to_device(fd, buf, 2);
   return 0;
+}
+
+const unsigned long timeout = 10000000;
+
+bool timeoutExeeded(struct timeval* recent, struct timeval* previous)
+{
+	__time_t secDiff = recent->tv_sec - previous->tv_sec;
+	if (secDiff < 0)
+		return false;
+	if (secDiff >= ULONG_MAX/1000000)
+		return true;
+	else
+	{
+		long diff = secDiff * 1000000 + recent->tv_usec - previous->tv_usec;
+		if (diff < 0)
+			return false;
+		if (diff > timeout)
+			return true;
+		else
+			return false;
+	}
 }
 
 #endif //CAR_DRIVER_H_INCLUDED
