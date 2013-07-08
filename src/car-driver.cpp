@@ -37,6 +37,8 @@ typedef	unsigned short	WORD;
 #define	XINPUT_GAMEPAD_DPAD_LEFT	0x0004
 #define	XINPUT_GAMEPAD_DPAD_RIGHT	0x0008
 #define	XINPUT_GAMEPAD_START		0x0010
+#define ROBOT_STRAIGHT			0x0020
+#define ROBOT_STOP			0x0040
 
 void error(const char *msg)
 {
@@ -191,6 +193,13 @@ int main(int argc, char** argv)
 				renewA(&tv, true);
 				printf("Now A is %d\n", channelA);
 		 }
+		 
+		 if ( buffer[0] & ROBOT_STRAIGHT)
+		 {
+		 	printf("STRAIGHT is received\n");
+		 	channelA = A_NTR;
+		 	printf("Now A is %d\n", channelA);
+		 }
 
 		 setPWM(fd, channelA, channelB);
 
@@ -209,7 +218,7 @@ int main(int argc, char** argv)
     close(sockfd);
 
 	  // set defaults
-	  setPWM(fd, 1500, 1450);
+	  setPWM(fd, A_NTR, B_NTR);
 
 	  serialPort::close_port(fd);
 
