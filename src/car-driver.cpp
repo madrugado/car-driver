@@ -21,7 +21,7 @@
 #include "serial-port.h"
 #include "car-driver.h"
 
-#define PORT_NAME "/dev/ttyUSB0"
+#define PORT_NAME "/dev/ttyACM0"
 
 #define A_MAX 1890
 #define A_MIN 1090
