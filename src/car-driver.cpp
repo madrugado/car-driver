@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <linux/tcp.h>
+#include <netinet/tcp.h>
 
 #include "serial-port.h"
 #include "car-driver.h"
