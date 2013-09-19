@@ -16,7 +16,8 @@
 
 namespace serialPort
 {
-  const char Preamble[] = {'<', '<', 'U', 'U', 'S', 'S', 'w', '<', '<', 'U', 'S', 'S', 'w', 'w', '<', '<'};
+  //const char Preamble[] = {'<', '<', 'U', 'U', 'S', 'S', 'w', '<', '<', 'U', 'S', 'S', 'w', 'w', '<', '<'};
+  const char Preamble[] = {'<', 'U', 'S', 'w'};
   
   int open_port(const char *port_name);
   int configure_port(int fd);
