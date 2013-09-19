@@ -23,13 +23,13 @@
 
 #define PORT_NAME "/dev/ttyUSB0"
 
-#define A_MAX 1850
-#define A_MIN 1060
+#define A_MAX 1890
+#define A_MIN 1090
 #define A_NTR 1450
 
-#define B_MAX 2000
-#define B_MIN 1000
-#define B_NTR 1470
+#define B_MAX 1700
+#define B_MIN 1260
+#define B_NTR 1460
 
 typedef	unsigned short	WORD;
 #define	XINPUT_GAMEPAD_DPAD_UP		0x0001
@@ -201,7 +201,7 @@ int main(int argc, char** argv)
 		 	printf("Now A is %d\n", channelA);
 		 }
 
-		 setPWM(fd, channelA, channelB);
+		 setPWM(fd, channelB, channelA);
 
 		 if (fp != NULL)
 		 {
@@ -218,7 +218,7 @@ int main(int argc, char** argv)
     close(sockfd);
 
 	  // set defaults
-	  setPWM(fd, A_NTR, B_NTR);
+	  setPWM(fd, B_NTR, A_NTR);
 
 	  serialPort::close_port(fd);
 
