@@ -215,7 +215,7 @@ int main(int argc, char** argv)
 		 	 fwrite(buffer, sizeof(WORD), 1, fp);
 
 		 	 double distance;
-		 	 serialPort::getDistanceFromSonar(fd, distance);
+		 	 getDistanceFromSonar(fd, distance);
 		   fwrite(&distance, sizeof(double), 1, fp);
 		 }
 	}
