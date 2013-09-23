@@ -14,6 +14,8 @@
 
 #define IN_BUF_SIZE 64
 
+#define FRONT_SONAR_COEFFICIENT 200.0
+
 namespace serialPort
 {
   //const char Preamble[] = {'<', '<', 'U', 'U', 'S', 'S', 'w', '<', '<', 'U', 'S', 'S', 'w', 'w', '<', '<'};
@@ -22,6 +24,7 @@ namespace serialPort
   int open_port(const char *port_name);
   int configure_port(int fd);
   int send_to_device(int fd, const unsigned char* send_bytes, int size);
+  int read_from_device(int fd, unsigned char* received_bytes, int size);
   int close_port(int fd);
 
   int open_port(const char *port_name)
@@ -103,6 +106,52 @@ namespace serialPort
   {
     close(fd);
     printf("SerialPort: port is closed\n");
+    return 0;
+  }
+
+  int read_from_device(int fd, unsigned char* received_bytes, int size)
+  {
+    struct timeval timeout;
+    timeout.tv_sec = TIMEOUT_S;
+    timeout.tv_usec = TIMEOUT_US;
+
+    fd_set rdfs;
+    FD_ZERO(&rdfs);
+    FD_SET(fd, &rdfs);
+
+    char inBuf[IN_BUF_SIZE];
+    char n;
+
+    n = select(fd + 1, &rdfs, NULL, NULL, &timeout);
+    if(n < 0) {
+      perror("serialPort: Error: select() failed\n");
+      return -1;
+    }
+    else if (n == 0) {
+      printf("serialPort: Error: read timeout\n");
+      return -1;
+    }
+    else {
+      int totalSize = sizeof(Preamble) + 1 + size; //<preamble> + <size> + <data>
+      int resCode = read(fd, inBuf, totalSize);
+      if(resCode == -1) {
+        fprintf(stderr, "serialPort: Error: read returned -1\n");
+      }
+      else
+        for (int i = 0; i < size; i++)
+          received_bytes[i] = inBuf[i + sizeof(Preamble) + 1];
+
+          // debug
+          /*
+          int b0 = inBuf[sizeof(Preamble) + 1];
+          int b1 = inBuf[sizeof(Preamble) + 2];
+          printf("serialPort: received values: %d %d\n", b0, b1);
+          */
+          /*
+          for (int i = 0; i < totalSize; i++)
+            printf("serialPort: received: i = %d, v = %d\n", i, inBuf[i]);
+          */
+    }
     return 0;
   }
 

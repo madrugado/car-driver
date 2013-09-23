@@ -213,11 +213,17 @@ int main(int argc, char** argv)
 			 fwrite(&(tv.tv_sec), sizeof(tv.tv_sec), 1, fp);
 		 	 fwrite(&(tv.tv_usec), sizeof(tv.tv_usec), 1, fp);
 		 	 fwrite(buffer, sizeof(WORD), 1, fp);
+
+		 	 unsigned char sonarBuf[2];
+		 	 serialPort::read_from_device(fd, sonarBuf, 2);
+		 	 double distance = static_cast<double>(sonarBuf[0] + (sonarBuf[1] << 8));
+		   distance /= FRONT_SONAR_COEFFICIENT;
+		   fwrite(&distance, sizeof(double), 1, fp);
 		 }
 	}
 
 
-    n = write(newsockfd,"I got your message",18);
+    n = write(newsockfd,"I got your message", 18);
     if (n < 0) error("ERROR writing to socket");
     close(newsockfd);
     close(sockfd);
