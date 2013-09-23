@@ -155,6 +155,31 @@ namespace serialPort
     return 0;
   }
 
+  int getDistanceFromSonar(int fd, double &distance)
+  {
+    uint8_t cmdBuf[sizeof(uint8_t) * 2];
+
+    cmdBuf[0] = sizeof(uint8_t);
+    cmdBuf[1] = deviceCommand::GET_SONAR_IL;
+
+    uint8_t inBuf[IN_BUF_SIZE];
+
+    int resCode;
+
+    resCode = send_to_device(fd, cmdBuf, sizeof(char) * 2);
+    if (resCode != 0)
+      return -2;
+
+    resCode = read_from_device(fd, inBuf, sizeof(uint16_t));
+    if (resCode != 0)
+      return -2;
+
+    distance = static_cast<double>(inBuf[0] + (inBuf[1] << 8));
+    distance /= FRONT_SONAR_COEFFICIENT;
+
+    return 0;
+  }
+
 } //namespace serialPort
 
 #endif //SERIAL_PORT_H_INCLUDED

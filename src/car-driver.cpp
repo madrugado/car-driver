@@ -214,10 +214,8 @@ int main(int argc, char** argv)
 		 	 fwrite(&(tv.tv_usec), sizeof(tv.tv_usec), 1, fp);
 		 	 fwrite(buffer, sizeof(WORD), 1, fp);
 
-		 	 unsigned char sonarBuf[2];
-		 	 serialPort::read_from_device(fd, sonarBuf, 2);
-		 	 double distance = static_cast<double>(sonarBuf[0] + (sonarBuf[1] << 8));
-		   distance /= FRONT_SONAR_COEFFICIENT;
+		 	 double distance;
+		 	 serialPort::getDistanceFromSonar(fd, distance);
 		   fwrite(&distance, sizeof(double), 1, fp);
 		 }
 	}
