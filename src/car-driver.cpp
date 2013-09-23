@@ -39,6 +39,7 @@ typedef	unsigned short	WORD;
 #define	XINPUT_GAMEPAD_START		0x0010
 #define ROBOT_STRAIGHT			0x0020
 #define ROBOT_STOP			0x0040
+#define ROBOT_CONTINUE			0x0080
 
 void error(const char *msg)
 {
@@ -199,6 +200,10 @@ int main(int argc, char** argv)
 		 	printf("STRAIGHT is received\n");
 		 	channelA = A_NTR;
 		 	printf("Now A is %d\n", channelA);
+		 }
+		 if ( buffer[0] & ROBOT_CONTINUE)
+		 {
+		 	printf("CONTINUE is received\n");
 		 }
 
 		 setPWM(fd, channelB, channelA);
