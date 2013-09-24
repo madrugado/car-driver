@@ -252,7 +252,7 @@ int record(const char* filename)
   double distance;
   struct timeval tv, prevTv = {0};
   unsigned char buffer[IN_BUF_SIZE];
-  long int intBuf[2];
+  __time_t intBuf[2];
 
   while(true)
   {
