@@ -49,8 +49,8 @@ void error(const char *msg)
 
 unsigned channelA = A_NTR, channelB = B_NTR; 
 struct timeval prevA = { 0 }, prevB = { 0 };
-const unsigned stepA = 50;
-const unsigned stepB = 30;
+const unsigned stepA = 30;
+const unsigned stepB = 10;
 
 void renewA(struct timeval *tv, bool right)
 {
@@ -154,6 +154,8 @@ int main(int argc, char** argv)
 	    return 1;
 	  serialPort::configure_port(fd);
 
+	  setPWM(fd, B_NTR, A_NTR);
+
 	struct timeval tv;
 
 	while (true)
@@ -254,14 +256,14 @@ int record(const char* filename)
   unsigned char buffer[IN_BUF_SIZE];
   __time_t intBuf[2];
 
-  while(true)
+  while(!feof(fp))
   {
     int n;
-    n = fread(buffer, sizeof(tv.tv_sec), 2, fp);
+    n = fread(intBuf, sizeof(tv.tv_sec), 2, fp);
     tv.tv_sec = intBuf[0];
     tv.tv_usec = intBuf[1];
     __suseconds_t delay = timeDiff(prevTv, tv);
-    printf("The delay is %d", delay);
+    printf("The delay is %d\n", delay);
     usleep(delay);
     prevTv.tv_sec = tv.tv_sec;
     prevTv.tv_usec = tv.tv_usec;
