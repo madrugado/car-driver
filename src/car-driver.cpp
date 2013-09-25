@@ -107,6 +107,10 @@ int main(int argc, char** argv)
          fprintf(stderr,"ERROR, no port provided\n");
          exit(1);
      }
+     portno = atoi(argv[1]);
+
+     if (portno <= 0)
+       return record(argv[2]);
 
      if (argc > 2)
      {
@@ -119,7 +123,6 @@ int main(int argc, char** argv)
      if (sockfd < 0)
         error("ERROR opening socket");
      bzero((char *) &serv_addr, sizeof(serv_addr));
-     portno = atoi(argv[1]);
      serv_addr.sin_family = AF_INET;
      serv_addr.sin_addr.s_addr = INADDR_ANY;
      serv_addr.sin_port = htons(portno);
@@ -234,4 +237,90 @@ int main(int argc, char** argv)
 	  serialPort::close_port(fd);
 
 	return 0;
+}
+
+int record(const char* filename)
+{
+  int fd = serialPort::open_port(PORT_NAME);
+  if (fd == -1)
+    return 1;
+  serialPort::configure_port(fd);
+  FILE* fp = fopen(filename, "rb");
+  if (fp == NULL)
+  {
+    fprintf(stderr, "\nFile with command log has not been open.\n");
+    return -1;
+  }
+  double distance;
+  struct timeval tv, prevTv = {0};
+  unsigned char buffer[IN_BUF_SIZE];
+  __time_t intBuf[2];
+
+  while(true)
+  {
+    int n;
+    n = fread(buffer, sizeof(tv.tv_sec), 2, fp);
+    tv.tv_sec = intBuf[0];
+    tv.tv_usec = intBuf[1];
+    usleep(timeDiff(prevTv, tv));
+    prevTv.tv_sec = tv.tv_sec;
+    prevTv.tv_usec = tv.tv_usec;
+
+    n = fread(buffer, sizeof(WORD), 1, fp);
+      if (n < 0)
+      {
+        if (fp != NULL) fclose(fp);
+        error("ERROR reading from file");
+      }
+      if (buffer[0] & XINPUT_GAMEPAD_START)
+      {
+       if (fp != NULL) fclose(fp);
+       puts("Received START. Exiting.");
+       break;
+      }
+      printf("Here is the message: %04x\n", (buffer[1] << 8) | buffer[0]);
+      //gettimeofday(&tv, NULL);
+
+      if ( buffer[0] & XINPUT_GAMEPAD_DPAD_DOWN)
+      {
+         printf("DOWN Key pressed\n");
+         renewB(&tv, false);
+         printf("Now B is %d\n", channelB);
+      }
+      if ( buffer[0] & XINPUT_GAMEPAD_DPAD_UP)
+      {
+         printf("UP Key pressed\n");
+         renewB(&tv, true);
+         printf("Now B is %d\n", channelB);
+      }
+      if ( buffer[0] & XINPUT_GAMEPAD_DPAD_LEFT)
+      {
+         printf("LEFT Key pressed\n");
+         renewA(&tv, false);
+         printf("Now A is %d\n", channelA);
+      }
+      if ( buffer[0] & XINPUT_GAMEPAD_DPAD_RIGHT)
+      {
+         printf("RIGHT Key pressed\n");
+         renewA(&tv, true);
+         printf("Now A is %d\n", channelA);
+      }
+
+      if ( buffer[0] & ROBOT_STRAIGHT)
+      {
+       printf("STRAIGHT is received\n");
+       channelA = A_NTR;
+       printf("Now A is %d\n", channelA);
+      }
+      if ( buffer[0] & ROBOT_CONTINUE)
+      {
+       printf("CONTINUE is received\n");
+      }
+
+      setPWM(fd, channelB, channelA);
+
+      fread(&distance, sizeof(distance), 1, fp);
+  }
+
+  return 0;
 }

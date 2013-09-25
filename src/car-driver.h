@@ -11,6 +11,7 @@
 
 int setPWM(int fd, int ch_A, int ch_B);
 int resetWTCTimer(int fd);
+int record(const char* filename);
 
 int setPWM(int fd, int ch_A, int ch_B)
 {
@@ -84,5 +85,12 @@ int getDistanceFromSonar(int fd, double &distance)
 
     return 0;
   }
+
+__suseconds_t timeDiff(struct timeval& tv1, struct timeval& tv2)
+{
+  if ((tv1.tv_sec == 0 && tv1.tv_usec == 0) || (tv2.tv_sec == 0 && tv2.tv_usec == 0))
+    return 0;
+  return (tv2.tv_sec - tv1.tv_sec) * 1000000 + tv2.tv_usec - tv1.tv_usec;
+}
 
 #endif //CAR_DRIVER_H_INCLUDED
