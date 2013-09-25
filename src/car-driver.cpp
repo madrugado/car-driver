@@ -262,7 +262,9 @@ int record(const char* filename)
     n = fread(buffer, sizeof(tv.tv_sec), 2, fp);
     tv.tv_sec = intBuf[0];
     tv.tv_usec = intBuf[1];
-    usleep(timeDiff(prevTv, tv));
+    __suseconds_t delay = timeDiff(prevTv, tv);
+    printf("The delay is %d", delay);
+    usleep(delay);
     prevTv.tv_sec = tv.tv_sec;
     prevTv.tv_usec = tv.tv_usec;
 
