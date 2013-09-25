@@ -256,14 +256,14 @@ int record(const char* filename)
   unsigned char buffer[IN_BUF_SIZE];
   __time_t intBuf[2];
 
-  while(true)
+  while(!feof(fp))
   {
     int n;
-    n = fread(buffer, sizeof(tv.tv_sec), 2, fp);
+    n = fread(intBuf, sizeof(tv.tv_sec), 2, fp);
     tv.tv_sec = intBuf[0];
     tv.tv_usec = intBuf[1];
     __suseconds_t delay = timeDiff(prevTv, tv);
-    printf("The delay is %d", delay);
+    printf("The delay is %d\n", delay);
     usleep(delay);
     prevTv.tv_sec = tv.tv_sec;
     prevTv.tv_usec = tv.tv_usec;
