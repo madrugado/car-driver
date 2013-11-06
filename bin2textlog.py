@@ -10,7 +10,7 @@ def interpret(filename):
                 sec = f.read(4)
                 s = str(struct.unpack("<l", sec)[0])
                 usec = f.read(4)
-                s += "." + str(struct.unpack("<l", usec)[0])
+                s += "." + str(struct.unpack("<l", usec)[0]).zfill(6)
                 
                 command = f.read(2)
                 c = (struct.unpack("<B", command[0]))[0]
@@ -45,8 +45,14 @@ def main():
         print "Usage: bin2textlog.py logfile\nOutput: logfile.txt"
         return 0
     with open(sys.argv[1] + ".txt", "wt") as f:
+        last = ""
         for s in interpret(sys.argv[1]):
+            last = s
             f.write(s)
+        time = last.split()[0].split(".")
+        time[0] = str(int(time[0]) + 1)
+	f.write(".".join(time) + " STOP 0.0")
+	#f.write("\n")
 
 if __name__=="__main__":
     main()
