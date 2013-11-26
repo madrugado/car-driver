@@ -6,7 +6,7 @@
 #include "serial-port.h"
 #include "commands.h"
 
-#define PORT_NAME "/dev/ttyUSB0"
+#define PORT_NAME "/dev/ttyACM0"
 #define BUF_SIZE 64
 
 int main(int argc, char** argv)

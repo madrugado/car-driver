@@ -4,7 +4,7 @@
 #include "serial-port.h"
 #include "car-driver.h"
 
-#define PORT_NAME "/dev/ttyUSB0"
+#define PORT_NAME "/dev/ttyACM0"
 
 int main(int argc, char** argv)
 {

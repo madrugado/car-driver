@@ -49,7 +49,7 @@ void error(const char *msg)
 
 unsigned channelA = A_NTR, channelB = B_NTR; 
 struct timeval prevA = { 0 }, prevB = { 0 };
-const unsigned stepA = 30;
+const unsigned stepA = 20;
 const unsigned stepB = 10;
 
 void renewA(struct timeval *tv, bool right)
