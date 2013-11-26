@@ -2,7 +2,7 @@
 #
 # Purpose: Makefile for "car-driver"
 # Author.: Val Malykh 
-# Version: 0.1
+# Version: 0.2
 # License: BSD
 #
 ###############################################################
@@ -32,7 +32,9 @@ UTILS = write-defaults pwm-test
 # this is the first target, thus it will be used implictely if no other target
 # was given. It defines that it is dependent on the application target and
 # the plugins
-all: $(APPS)
+all: apps utils
+
+apps: $(APPS)
 
 car-driver: ${SRCDIR}/car-driver.cpp ${SRCDIR}/commands.h ${SRCDIR}/car-driver.h
 	$(CC) $(CFLAGS) ${SRCDIR}/car-driver.cpp $(LFLAGS) -o car-driver
@@ -46,10 +48,12 @@ utils: $(UTILS)
 
 write-defaults: ${SRCDIR}/write-defaults.cpp ${SRCDIR}/commands.h ${SRCDIR}/serial-port.h
 		$(CC) $(CFLAGS) ${SRCDIR}/write-defaults.cpp $(LFLAGS) -o utils/write-defaults
-
+		chmod 755 utils/write-defaults
 
 pwm-test: ${SRCDIR}/pwm-test.cpp ${SRCDIR}/commands.h ${SRCDIR}/car-driver.h
-		$(CC) $(CFLAGS) ${SRCDIR}/pwm-test.cpp $(LFLAGS) -o utils/pwn-test
+		$(CC) $(CFLAGS) ${SRCDIR}/pwm-test.cpp $(LFLAGS) -o utils/pwm-test
+		chmod 755 utils/pwm-test
+
 # cleanup
 clean:
 	rm -f *.a *.o $(APPS) core *~ *.so *.lo
