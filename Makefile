@@ -27,6 +27,8 @@ SRCDIR = ./src
 
 APPS = car-driver demo
 
+UTILS = write-defaults pwm-test
+
 # this is the first target, thus it will be used implictely if no other target
 # was given. It defines that it is dependent on the application target and
 # the plugins
@@ -40,12 +42,24 @@ demo: ${SRCDIR}/demo.cpp ${SRCDIR}/commands.h ${SRCDIR}/car-driver.h
 	$(CC) $(CFLAGS) ${SRCDIR}/demo.cpp $(LFLAGS) -o demo
 	chmod 755 demo	
 
+utils: $(UTILS)
+
+write-defaults: ${SRCDIR}/write-defaults.cpp ${SRCDIR}/commands.h ${SRCDIR}/serial-port.h
+		$(CC) $(CFLAGS) ${SRCDIR}/write-defaults.cpp $(LFLAGS) -o utils/write-defaults
+
+
+pwm-test: ${SRCDIR}/pwm-test.cpp ${SRCDIR}/commands.h ${SRCDIR}/car-driver.h
+		$(CC) $(CFLAGS) ${SRCDIR}/pwm-test.cpp $(LFLAGS) -o utils/pwn-test
 # cleanup
 clean:
 	rm -f *.a *.o $(APPS) core *~ *.so *.lo
+	for util in $(UTILS); do \
+		rm -f utils/$$util ; \
+        done;
 
 
-# install MJPG-streamer and example webpages
+
+# install
 install: all
 	for app in $(APPS); do \
 		install --mode=755 $$app $(DESTDIR) ; \
